@@ -11,3 +11,57 @@ SELECT 'TOM' as ACTOR, 'M3' AS MOVIES_ID,100 AS DURATION
 )T1;
 
 
+
+select date_sub(current_date,interval 1 day);
+
+create table emp_login
+(
+emp_name varchar(1000),
+login_time date,
+status varchar(1000)
+);
+
+
+insert into emp_login
+SELECT 'A1' as EMP_NAME,cast('2024-01-01' as date) as login_date,'PRESENT' AS STATUS UNION ALL
+SELECT 'A1' as EMP_NAME,cast('2024-01-02' as date) as login_date,'PRESENT' AS STATUS UNION ALL
+SELECT 'A1' as EMP_NAME,cast('2024-01-03' as date) as login_date,'PRESENT' AS STATUS UNION ALL
+SELECT 'A1' as EMP_NAME,cast('2024-01-04' as date) as login_date,'ABSENT' AS STATUS UNION ALL
+SELECT 'A1' as EMP_NAME,cast('2024-01-05' as date) as login_date,'PRESENT' AS STATUS UNION ALL
+SELECT 'A1' as EMP_NAME,cast('2024-01-06' as date) as login_date,'PRESENT' AS STATUS UNION ALL
+SELECT 'A1' as EMP_NAME,cast('2024-01-07' as date) as login_date,'ABSENT' AS STATUS UNION ALL
+SELECT 'A1' as EMP_NAME,cast('2024-01-08' as date) as login_date,'ABSENT' AS STATUS UNION ALL
+SELECT 'A1' as EMP_NAME,cast('2024-01-09' as date) as login_date,'ABSENT' AS STATUS UNION ALL
+SELECT 'A1' as EMP_NAME,cast('2024-01-10' as date) as login_date,'PRESENT' AS STATUS UNION ALL
+SELECT 'A2' as EMP_NAME,cast('2024-01-06' as date) as login_date,'PRESENT' AS STATUS UNION ALL
+SELECT 'A2' as EMP_NAME,cast('2024-01-07' as date) as login_date,'PRESENT' AS STATUS  UNION ALL
+SELECT 'A2' as EMP_NAME,cast('2024-01-08' as date) as login_date,'ABSENT' AS STATUS UNION ALL
+SELECT 'A2' as EMP_NAME,cast('2024-01-09' as date) as login_date,'PRESENT' AS STATUS UNION ALL
+SELECT 'A2' as EMP_NAME,cast('2024-01-10' as date) as login_date,'ABSENT' AS STATUS ;
+
+commit;
+
+
+ 
+ q2. get emp_name and crossponding present/absent start and end date.
+ SELECT 
+ EMP_NAME,LOGIN_TIME,LST3,STATUS,
+ FIRST_VALUE(LOGIN_TIME) OVER(PARTITION BY EMP_NAME,LST3 ORDER BY LOGIN_TIME),
+ LAST_VALUE(LOGIN_TIME) OVER(PARTITION BY EMP_NAME,LST3 ORDER BY LOGIN_TIME RANGE BETWEEN UNBOUNDED PRECEDING 
+ AND UNBOUNDED FOLLOWING )
+ FROM
+ (
+ select EMP_NAME,LOGIN_TIME,STATUS,LST1-LST2 AS LST3 from
+ (
+ Select T1.*,
+ ROW_NUMBER() OVER(PARTITION BY EMP_NAME ORDER BY LOGIN_TIME ) LST1,
+ ROW_NUMBER() OVER(PARTITION BY EMP_NAME,STATUS ORDER BY LOGIN_TIME 
+ ) LST2
+ from emp_login T1 ORDER BY EMP_NAME,LOGIN_TIME
+ )T3 
+ )T5 ORDER BY LOGIN_TIME;
+ where status = 'PRESENT' ;
+ 
+ 
+ #Q3 product wise min/max price cell phone
+
