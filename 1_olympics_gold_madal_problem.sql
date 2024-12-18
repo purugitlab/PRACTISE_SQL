@@ -25,6 +25,14 @@ INSERT INTO raw_layer.events VALUES (12,'500m',2016,'Thomas','Steven','Catherine
 
 commit
 
+  #OUTPUT Need player who only won GOLD
+'Amthhew Mcgarray','1'
+'Charles','3'
+'Ronald','1'
+'Thomas','3'
+'jessica','1'
+
+
 select * from raw_layer.events;
 #Approach-1
 with temp as (
